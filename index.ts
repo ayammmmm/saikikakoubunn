@@ -5,18 +5,25 @@
 // <factor> = <number> | '(' <exp> ')'
 // 先頭から順番に構文解析していく
 
+let stock: number[] = [];
+let result = 0;
+
+// 計算できるフラグ
+let isMath = false;
+
 // index 0
 let count = 0;
-
 const addCount = () => count += 1;
 
 const nextString = () => stringArray[count];
 
-const number = (): number => {
-    const value = nextString();
-    console.assert(parseInt(value) == NaN, '数値じゃないからエラーだよ');
-    addCount();
-    return Number(value);
+const number = () => {
+    let value: number = 0;
+    for (let i = 0; i < stringArray.length; i++) {
+        if (parseInt(nextString())) break;
+        value += Number(nextString()) + 10 * i;
+    }
+    return value;
 }
 
 // <exp> = <term> [('+'|'-') <term>]
@@ -24,11 +31,14 @@ const exp = () => {
     const value = nextString();
     if (value == '+') {
         addCount();
+        if (stringArray.length <= count) return;
     }
     if (value == '-') {
         addCount();
+        if (stringArray.length <= count) return;
     }
 
+    term();
 }
 
 // <term> = <factor> [('*'|'/') <factor>]
@@ -36,10 +46,14 @@ const term = () => {
     const value = nextString();
     if (value == '*') {
         addCount();
+        if (stringArray.length <= count) return;
     }
     if (value == '/') {
         addCount();
+        if (stringArray.length <= count) return;
     }
+
+    factor();
 }
 
 // <factor> = <number> | '(' <exp> ')'
@@ -49,13 +63,14 @@ const factor = () => {
     if (value == '(') {
         exp();
         addCount();
+        if (stringArray.length <= count) return;
         // if (value == ')') {
 
         //     addCount();
         // }
     }
 
-    return number();
+    number();
 }
 
 let stringArray: string[];
@@ -63,4 +78,8 @@ let stringArray: string[];
 const main = (value: string) => {
     stringArray = [...value];
     exp();
+}
+
+const calcurate = () => {
+
 }
