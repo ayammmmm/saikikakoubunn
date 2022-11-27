@@ -51,7 +51,9 @@ const term = (s: string[]): number => {
         }
         else if (s[count] == '/') {
             addCount();
-            value /= factor(s);
+            const res = factor(s);
+            console.assert(res != 0, '0で割れないよ');
+            value /= res;
             continue;
         }
         else if (s[count] == '(' && isNaN(Number(value)) == false) {
@@ -88,6 +90,7 @@ const main = (value: string) => {
 // テストコード
 Deno.test("saikikakoubun Test", () => {
     // const res = main('5+3');
+    // const res = main('3*(1*(5+3)/0)');
     const res = main('3*(1*(5+3)/2)');
 
     console.log(res);
