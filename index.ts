@@ -5,81 +5,81 @@
 // <factor> = <number> | '(' <exp> ')'
 // 先頭から順番に構文解析していく
 
-let stock: number[] = [];
-let result = 0;
-
-// 計算できるフラグ
-let isMath = false;
-
 // index 0
 let count = 0;
 const addCount = () => count += 1;
 
-const nextString = () => stringArray[count];
-
-const number = () => {
+const number = (s: string[]) => {
     let value: number = 0;
-    for (let i = 0; i < stringArray.length; i++) {
-        if (parseInt(nextString())) break;
-        value += Number(nextString()) + 10 * i;
+    for (; count < s.length;) {
+        value += Number(s[count]);
+        addCount();
     }
     return value;
 }
 
 // <exp> = <term> [('+'|'-') <term>]
-const exp = () => {
-    const value = nextString();
-    if (value == '+') {
-        addCount();
-        if (stringArray.length <= count) return;
-    }
-    if (value == '-') {
-        addCount();
-        if (stringArray.length <= count) return;
+const exp = (s: string[]): number => {
+    let value = term(s);
+    for (; count < s.length;) {
+        if (s[count] == '+') {
+            addCount();
+            value += term(s);
+            continue;
+        }
+        if (s[count] == '-') {
+            addCount();
+            value -= term(s);
+            continue;
+        }
+        return value;
     }
 
-    term();
+    return value;
 }
 
 // <term> = <factor> [('*'|'/') <factor>]
-const term = () => {
-    const value = nextString();
-    if (value == '*') {
-        addCount();
-        if (stringArray.length <= count) return;
+const term = (s: string[]): number => {
+    let value = factor(s);
+    for (; count < s.length;) {
+        if (s[count] == '*') {
+            addCount();
+            value *= factor(s);
+            continue;
+        }
+        else if (s[count] == '/') {
+            addCount();
+            value /= factor(s);
+            continue;
+        }
+        else if (s[count] == '(' && Number(value) != NaN) {
+            addCount();
+            value *= factor(s);
+            continue;
+        }
+        else {
+            break;
+        }
     }
-    if (value == '/') {
-        addCount();
-        if (stringArray.length <= count) return;
-    }
-
-    factor();
+    return value;
 }
 
 // <factor> = <number> | '(' <exp> ')'
-const factor = () => {
-
-    const value = nextString();
-    if (value == '(') {
-        exp();
+const factor = (s: string[]): number => {
+    if (s[count] == '(') {
         addCount();
-        if (stringArray.length <= count) return;
-        // if (value == ')') {
-
-        //     addCount();
-        // }
+        const value = exp(s);
+        if (s[count] == ')') {
+            addCount();
+            return value;
+        }
     }
 
-    number();
+    return number(s);
 }
 
-let stringArray: string[];
 // 呼び出し元
 const main = (value: string) => {
-    stringArray = [...value];
-    exp();
-}
-
-const calcurate = () => {
-
+    let stringArray: string[] = [...value];
+    exp(stringArray);
 }
