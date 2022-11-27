@@ -12,11 +12,12 @@ const addCount = () => count += 1;
 const number = (s: string[]) => {
     let value: number = 0;
     for (; count < s.length;) {
-        if (Number(s[count]) != NaN) break;
+        if (isNaN(Number(s[count]))) break;
         value += Number(s[count]);
         addCount();
     }
-    return Number(value);
+
+    return value;
 }
 
 // <exp> = <term> [('+'|'-') <term>]
@@ -53,7 +54,7 @@ const term = (s: string[]): number => {
             value /= factor(s);
             continue;
         }
-        else if (s[count] == '(' && Number(value) != NaN) {
+        else if (s[count] == '(' && isNaN(Number(value)) == false) {
             value *= factor(s);
             continue;
         }
@@ -84,9 +85,9 @@ const main = (value: string) => {
     return exp(stringArray);
 }
 
-
 // テストコード
 Deno.test("saikikakoubun Test", () => {
+    // const res = main('5+3');
     const res = main('3*(1*(5+3)/2)');
 
     console.log(res);
