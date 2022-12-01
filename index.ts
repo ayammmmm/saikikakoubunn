@@ -10,14 +10,14 @@ let count = 0;
 const addCount = () => count += 1;
 
 const number = (s: string[]) => {
-    let value: number = 0;
+    let value: string = '0';
     for (; count < s.length;) {
         if (isNaN(Number(s[count]))) break;
-        value += Number(s[count]);
+        value += s[count];
         addCount();
     }
 
-    return value;
+    return Number(value);
 }
 
 // <exp> = <term> [('+'|'-') <term>]
@@ -92,6 +92,7 @@ Deno.test("saikikakoubun Test", () => {
     // const res = main('5+3');
     // const res = main('3*(1*(5+3)/0)');
     const res = main('3*(1*(5+3)/2)');
+    // const res = main('3*5+20');
 
     console.log(res);
 
