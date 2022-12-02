@@ -1,3 +1,4 @@
+import { assertEquals } from "https://deno.land/std@0.167.0/testing/asserts.ts";
 // 3 * ( 1 * ( 5 + 3 ) / 2 )
 // 優先順位：'(', ')' > '*', '/' > '+', '-'
 // <exp> = <term> [('+'|'-') <term>]
@@ -10,14 +11,14 @@ let count = 0;
 const addCount = () => count += 1;
 
 const number = (s: string[]) => {
-    let value: string = '0';
+    let value: number = 0;
     for (; count < s.length;) {
         if (isNaN(Number(s[count]))) break;
-        value += s[count];
+        value += Number(s[count]);
         addCount();
     }
 
-    return Number(value);
+    return value;
 }
 
 // <exp> = <term> [('+'|'-') <term>]
@@ -83,20 +84,25 @@ const factor = (s: string[]): number => {
 
 // 呼び出し元
 const main = (value: string) => {
+    count = 0;
     let stringArray: string[] = [...value];
     return exp(stringArray);
 }
 
 // テストコード
-Deno.test("saikikakoubun Test", () => {
-    // const res = main('5+3');
-    // const res = main('3*(1*(5+3)/0)');
-    const res = main('3*(1*(5+3)/2)');
-    // const res = main('3*5+20');
+// Deno.test("saikikakoubun Test1", () => {
+//     // const res = main('5+3');
+//     // const res = main('3*(1*(5+3)/0)');
+//     const res = main('3*(1*(5+3)/2)');
 
-    console.log(res);
 
-    if (res != 12) {
-        throw Error("res should be equal to 12");
-    }
-});
+//     console.log(res);
+
+//     if (res != 12) {
+//         throw Error("res should be equal to 12");
+//     }
+// });
+Deno.test("saikikakoubun Test1", () => assertEquals(main('5+3'), 8))
+Deno.test("saikikakoubun Test2", () => assertEquals(main('3*(1*(5+3)/0)'), Infinity))
+Deno.test("saikikakoubun Test3", () => assertEquals(main('3*5+20'), 35))
+Deno.test("saikikakoubun Test4", () => assertEquals(main('3*(1*(5+3)/2)'), 12))
