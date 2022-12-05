@@ -11,14 +11,14 @@ let count = 0;
 const addCount = () => count += 1;
 
 const number = (s: string[]) => {
-    let value: number = 0;
+    let value: string = '0';
     for (; count < s.length;) {
         if (isNaN(Number(s[count]))) break;
-        value += Number(s[count]);
+        value += s[count];
         addCount();
     }
 
-    return value;
+    return Number(value);
 }
 
 // <exp> = <term> [('+'|'-') <term>]
